@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    [field: Header("References")]
+    [field: SerializeField] public PlayerSO Data { get; private set; }
+    
     [field: Header("Animations")]
     [field: SerializeField] public PlayerAnimationData AnimationData { get; private set; }
     
@@ -13,18 +16,34 @@ public class Player : MonoBehaviour
     public PlayerInput Input { get; private set; }
     public CharacterController Controller { get; private set; }
 
+    private PlayerStateMachine _stateMachine;
+    
     private void Awake()
     {
         AnimationData.Initialize();
         
-        Rigidbody.GetComponent<Rigidbody>();
-        Animator.GetComponent<Animator>();
-        Input.GetComponent<PlayerInput>();
-        Controller.GetComponent<CharacterController>();
+        Rigidbody = GetComponent<Rigidbody>();
+        Animator = GetComponentInChildren<Animator>();
+        Input = GetComponent<PlayerInput>();
+        Controller = GetComponent<CharacterController>();
+
+        _stateMachine = new PlayerStateMachine(this);
     }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        _stateMachine.ChangeState(_stateMachine.IdleState);
+    }
+
+    private void Update()
+    {
+        _stateMachine.HandleInput();
+        _stateMachine.Update();
+    }
+
+    private void FixedUpdate()
+    {
+        _stateMachine.PhysicsUpdate();
     }
 }
