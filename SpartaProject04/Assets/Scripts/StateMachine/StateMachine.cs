@@ -4,27 +4,27 @@ using UnityEngine;
 
 public abstract class StateMachine
 {
-    protected IState currentState;
+    protected IState CurrentState;
 
     public void ChangeState(IState newState)
     {
-        currentState?.Exit();
-        currentState = newState;
-        currentState?.Enter();
+        CurrentState?.Exit();
+        CurrentState = newState;
+        CurrentState?.Enter();
     }
 
     public void HandleInput()
     {
-        currentState?.HandleInput();
+        CurrentState?.HandleInput();
     }
 
     public void Update()
     {
-        currentState?.Update();
+        CurrentState?.Update();
     }
 
     public void PhysicsUpdate()
     {
-        currentState?.PhysicsUpdate();
+        CurrentState?.PhysicsUpdate();
     }
 }
