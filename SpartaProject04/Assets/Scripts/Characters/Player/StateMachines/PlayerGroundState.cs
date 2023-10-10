@@ -24,6 +24,12 @@ public class PlayerGroundState : PlayerBaseState
     public override void Update()
     {
         base.Update();
+        
+        if(StateMachine.IsAttacking)
+        {
+            OnAttack();
+            return;
+        }
     }
 
     public override void PhysicsUpdate()
@@ -56,6 +62,11 @@ public class PlayerGroundState : PlayerBaseState
     protected override void OnJumpStarted(InputAction.CallbackContext context)
     {
         StateMachine.ChangeState(StateMachine.JumpState);
+    }
+
+    protected virtual void OnAttack()
+    {
+        StateMachine.ChangeState(StateMachine.ComboAttackState);
     }
 }
 
