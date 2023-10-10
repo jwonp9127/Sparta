@@ -46,6 +46,7 @@ public class PlayerBaseState : IState
         PlayerInput input = StateMachine.Player.Input;
         input.PlayerActions.Movement.canceled += OnMovementCanceled;
         input.PlayerActions.Run.started += OnRunStarted;
+        input.PlayerActions.Jump.started += OnJumpStarted;
     }
 
     protected virtual void RemoveInputActionsCallbacks()
@@ -53,6 +54,7 @@ public class PlayerBaseState : IState
         PlayerInput input = StateMachine.Player.Input;
         input.PlayerActions.Movement.canceled -= OnMovementCanceled;
         input.PlayerActions.Run.started -= OnRunStarted;        
+        input.PlayerActions.Jump.started -= OnJumpStarted;
     }
 
     protected virtual void OnRunStarted(InputAction.CallbackContext context)
@@ -64,7 +66,11 @@ public class PlayerBaseState : IState
     {
         
     }
-    
+
+    protected virtual void OnJumpStarted(InputAction.CallbackContext context)
+    {
+        
+    }
     
 
     private void ReadMovementInput()
@@ -96,7 +102,8 @@ public class PlayerBaseState : IState
     private void Move(Vector3 movementDirection)
     {
         float movementSpeed = GetMovementSpeed();
-        StateMachine.Player.Controller.Move(movementDirection * movementSpeed * Time.deltaTime);
+        StateMachine.Player.Controller.Move(
+            (movementDirection * movementSpeed + StateMachine.Player.ForceReceiver.Movement) * Time.deltaTime);
     }
 
     private float GetMovementSpeed()
